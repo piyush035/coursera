@@ -30,3 +30,7 @@
 
 # Debugging
 *.dSYM
+/target/
+out
+.idea
+/*.iml
