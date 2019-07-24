@@ -1,3 +1,5 @@
+package algorithms.week1;
+
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 import java.util.Arrays;

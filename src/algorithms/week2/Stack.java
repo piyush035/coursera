@@ -1,3 +1,4 @@
+package algorithms.week2;
 public class Stack {
     private Node first = null;
     private class Node{

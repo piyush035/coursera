@@ -1,3 +1,4 @@
+package algorithms.week2;
 import java.io.*;
 
 public class Main {
