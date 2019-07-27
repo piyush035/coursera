@@ -1,12 +1,12 @@
 package algorithms.week2;
-import edu.princeton.cs.algs4.Insertion;
-import edu.princeton.cs.algs4.Selection;
 
-import java.io.*;
+import edu.princeton.cs.algs4.Insertion;
+
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
