@@ -10,8 +10,9 @@ public class Permutation {
         while (!StdIn.isEmpty()) {
             queue.enqueue(StdIn.readString());
         }
-        while(totalNumber-- > 0) {
+        while (totalNumber > 0) {
             StdOut.println(queue.dequeue());
+            totalNumber--;
         }
     }
 }
