@@ -2,8 +2,6 @@ package algorithms.week1;
 
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
-import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class PercolationStats {
 
@@ -71,10 +69,10 @@ public class PercolationStats {
 
     // test client (see below)
     public static void main(String[] args) {
-        int N = Integer.parseInt(args[0]);
-        int T = Integer.parseInt(args[1]);
+        int n = Integer.parseInt(args[0]);
+        int t = Integer.parseInt(args[1]);
 
-        PercolationStats stats = new PercolationStats(N, T);
+        PercolationStats stats = new PercolationStats(n, t);
         System.out.println("mean                    = " + stats.mean());
         System.out.println("stddev                  = " + stats.stddev());
         System.out.println("95% confidence interval = " + stats.confidenceLo() + ", " + stats.confidenceHi());

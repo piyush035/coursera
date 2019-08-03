@@ -2,12 +2,6 @@ package algorithms.week1;
 
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
-import java.util.Arrays;
-
-import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.StdStats;
-import edu.princeton.cs.algs4.WeightedQuickUnionUF;
-
 public class Percolation {
 
     private boolean[][] opened;
@@ -59,7 +53,7 @@ public class Percolation {
                 uf2.union((i - 1) * len + j - 1, (i - 1) * len + j);
             }
         } else {
-            throw new IndexOutOfBoundsException();
+            throw new IllegalArgumentException();
         }
     }
 
@@ -67,14 +61,14 @@ public class Percolation {
         if (checkIndex(i, j)) {
             return opened[i - 1][j - 1];
         }
-        throw new IndexOutOfBoundsException();
+        throw new IllegalArgumentException();
     }
 
     public boolean isFull(int i, int j) {
         if (checkIndex(i, j)) {
             return uf2.connected((i - 1) * len + j - 1, top);
         }
-        throw new IndexOutOfBoundsException();
+        throw new IllegalArgumentException();
     }
 
     public int numberOfOpenSites() {
