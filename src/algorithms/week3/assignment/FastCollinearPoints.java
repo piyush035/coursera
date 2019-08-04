@@ -38,15 +38,15 @@ public class FastCollinearPoints {
 
     private static LineSegment[] filterSegments(Point[][] segments) {
         Stack<LineSegment> filtered = new Stack<>();
-        int N = segments.length;
+        int n = segments.length;
 
-        for (int i = 0, c = 0; i < N; i++, c = 0) {
+        for (int i = 0, c = 0; i < n; i++, c = 0) {
             Point[] cur = segments[i], comp, longest = cur;
             if (cur == null) {
                 continue;
             }
 
-            while (c < N) {
+            while (c < n) {
                 comp = segments[c];
 
                 if (comp != null && isSame(cur, comp)) {
