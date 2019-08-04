@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
 
         // read the n points from a file
-        In in = new In("C:\\Piyush\\Project\\code\\coursera\\src\\algorithms\\week3\\assignment\\input6.txt");
+        In in = new In("C:\\Piyush\\Project\\code\\coursera\\src\\algorithms\\week3\\assignment\\files\\input48.txt");
         int n = in.readInt();
         Point[] points = new Point[n];
         for (int i = 0; i < n; i++) {
@@ -27,7 +27,7 @@ public class Main {
         StdDraw.show();
 
         // print and draw the line segments
-        FastCollinearPoints collinear = new FastCollinearPoints(points);
+        BruteCollinearPoints collinear = new BruteCollinearPoints(points);
         for (LineSegment segment : collinear.segments()) {
             StdOut.println(segment);
             segment.draw();
