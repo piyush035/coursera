@@ -3,8 +3,6 @@ package algorithms.week3.assignment;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import edu.princeton.cs.algs4.Stack;
-
 public class FastCollinearPoints {
 
     private Point[] p;
