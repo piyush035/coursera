@@ -2,16 +2,6 @@ package algorithms.week3.assignment;
 
 import java.util.Arrays;
 
-/******************************************************************************
- *  Compilation:  javac Point.java
- *  Execution:    java Point
- *  Dependencies: none
- *
- *  An immutable data type for points in the plane.
- *  For use on Coursera, Algorithms Part I programming assignment.
- *
- ******************************************************************************/
-
 public class BruteCollinearPoints {
 
     private LineSegment[] lineSegments;
