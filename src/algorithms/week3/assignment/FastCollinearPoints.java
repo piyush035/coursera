@@ -1,9 +1,7 @@
 package algorithms.week3.assignment;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
+import edu.princeton.cs.algs4.Stack;
 
 public class FastCollinearPoints {
 
