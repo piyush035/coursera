@@ -2,59 +2,79 @@ package algorithms.week1;
 
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
-import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class PercolationStats {
-    private static final double DEFAULT_MULTIPLIER = 1.96;
-    private final double[] results;
-    private final int T;
-    public PercolationStats(int N, int T) {
-        if (N <= 0 || T <= 0) {
-            throw new IllegalArgumentException("N and T should be greater than zero!");
+
+    private final double mean;
+    private final double stddev;
+    private final double confidenceLo;
+    private final double confidenceHi;
+
+    // perform independent trials on an n-by-n grid
+    public PercolationStats(int n, int trials) {
+        if (n <= 0) {
+            throw new IllegalArgumentException("The grid size must be bigger than zero");
         }
-        this.T = T;
-        results = new double[T];
-        int square = N * N;
-        for (int i = 0; i < T; i++) {
-            Percolation percolation = new Percolation(N);
-            double numberOfOpenedCells = 0;
+        if (trials <= 0) {
+            throw new IllegalArgumentException("The number of experiments must be bigger than zero");
+        }
+
+        double[] percolationThresholds = new double[trials];
+        for (int i = 0; i < trials; i++) {
+            Percolation percolation = new Percolation(n);
+
+            int runs = 0;
             while (!percolation.percolates()) {
-                int x = StdRandom.uniform(1, N + 1);
-                int y = StdRandom.uniform(1, N + 1);
-                if (!percolation.isOpen(y, x)) {
-                    percolation.open(y, x);
-                    numberOfOpenedCells++;
-                }
+                int column;
+                int row;
+
+                do {
+                    column = 1 + StdRandom.uniform(n);
+                    row = 1 + StdRandom.uniform(n);
+                } while (percolation.isOpen(row, column));
+
+                percolation.open(row, column);
+                runs++;
             }
-            results[i] = numberOfOpenedCells / square;
+
+            percolationThresholds[i] = runs / (double) (n * n);
         }
+
+        mean = StdStats.mean(percolationThresholds);
+        stddev = StdStats.stddev(percolationThresholds);
+        double confidenceFraction = (1.96 * stddev()) / Math.sqrt(trials);
+        confidenceLo = mean - confidenceFraction;
+        confidenceHi = mean + confidenceFraction;
     }
 
-    public static void main(String[] args) {
-        new PercolationStats(Integer.parseInt(args[0]), Integer.parseInt(args[1])).info();
-    }
-
+    // sample mean of percolation threshold
     public double mean() {
-        return StdStats.mean(results);
+        return mean;
     }
 
+    // sample standard deviation of percolation threshold
     public double stddev() {
-        return StdStats.stddev(results);
+        return stddev;
     }
 
-
+    // low endpoint of 95% confidence interval
     public double confidenceLo() {
-        return mean() - DEFAULT_MULTIPLIER * stddev() / Math.sqrt(T);
+        return confidenceLo;
     }
 
+    // high endpoint of 95% confidence interval
     public double confidenceHi() {
-        return mean() + DEFAULT_MULTIPLIER * stddev() / Math.sqrt(T);
+        return confidenceHi;
     }
 
-    private void info() {
-        StdOut.printf("mean\t\t\t\t\t= %f\nstddev\t\t\t\t\t= %f\n95%% confidence interval\t= %f, %f\n",
-                mean(), stddev(), confidenceLo(), confidenceHi());
-    }
+    // test client (see below)
+    public static void main(String[] args) {
+        int n = Integer.parseInt(args[0]);
+        int t = Integer.parseInt(args[1]);
 
+        PercolationStats stats = new PercolationStats(n, t);
+        System.out.println("mean                    = " + stats.mean());
+        System.out.println("stddev                  = " + stats.stddev());
+        System.out.println("95% confidence interval = " + stats.confidenceLo() + ", " + stats.confidenceHi());
+    }
 }

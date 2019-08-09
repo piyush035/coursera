@@ -26,33 +26,24 @@ public class Main {
     }*/
     // For Selection Sort
     public static void main(String[] args) throws  IOException {
-        Scanner scanner = new Scanner(new File("C:\\Piyush\\projects\\code\\coursera\\input.txt"));
-        //int [] tall = new int [1];
-        List<Integer> integerList = new ArrayList<Integer>();
-        int i =0;
-        while(scanner.hasNextInt())
-        {
-            /*if (i == tall.length) {
-                tall = resize(tall,2 * tall.length);
-            }*/
-            //tall[i++] = scanner.nextInt();
-            integerList.add(scanner.nextInt());
+
+
+
+
+        ArrayList<Integer> A = new ArrayList<Integer>();
+        A.add(5);
+        A.add(10);
+        A.add(2);
+        A.add(1);
+
+        ArrayList<Integer> B = performOps(A);
+        for (int i = 0; i < B.size(); i++) {
+            System.out.print(B.get(i) + " ");
         }
-        //for(int t : tall){
-        //    System.out.print(t + " ");
-        //}
-        Integer [] tall = integerList.toArray(new Integer[integerList.size()]);
-        System.out.print(tall.length);
-        //System.out.println(Arrays.asList(tall));
-        Instant start = Instant.now();
-        //SelectionSort.sort(tall);
-        Insertion.sort(tall);//83764Total time :: 6564
-        Instant finish = Instant.now();
-        long timeElapsed = Duration.between(start, finish).toMillis();  //in millis
-        System.out.println("Total time :: " + timeElapsed);
-        /*for(int t : tall){
-            System.out.print(t + " ");
-        }*/
+
+
+
+
     }
 
     private static int[] resize(int [] old,int size) {
@@ -62,4 +53,19 @@ public class Main {
         }
         return copy;
     }
+
+
+    static ArrayList<Integer> performOps(ArrayList<Integer> A) {
+        ArrayList<Integer> B = new ArrayList<Integer>();
+        for (int i = 0; i < 2 * A.size(); i++) B.add(0);
+        for (int i = 0; i < A.size(); i++) {
+            B.set(i, A.get(i));
+            B.set(i + A.size(), A.get((A.size() - i) % A.size()));
+        }
+        return B;
+    }
+
+
 }
+
+

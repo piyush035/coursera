@@ -2,88 +2,85 @@ package algorithms.week1;
 
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
-import java.util.Arrays;
-
-import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.StdStats;
-import edu.princeton.cs.algs4.WeightedQuickUnionUF;
-
 public class Percolation {
 
-    private final WeightedQuickUnionUF weightedQuickUnionUF;
+    private boolean[][] opened;
+    private final int top;
+    private final int bottom;
+    private int countOpen;
+    private final WeightedQuickUnionUF uf;
+    private final WeightedQuickUnionUF uf2;
+    private final int len;
 
-    private final boolean[] opened;
-
-    private final int N;
-
-    private final int firstReserved, secondReserved;
-
-    public Percolation(int N) {
-        this.N = N;
-        firstReserved = N * N;
-        secondReserved = firstReserved + 1;
-        weightedQuickUnionUF = new WeightedQuickUnionUF(secondReserved + 1);
-        opened = new boolean[firstReserved];
-    }
-
-    public boolean isOpen(int y, int x) {
-        validate(x, y); int n =0;
-        if(n ==1){
-
-        }else if (n!=0){
-
+    public Percolation(int n) {
+        if (n <= 0) {
+            throw new IllegalArgumentException("Given n <= 0");
         }
-        return opened[xyTo1D(y, x)];
+        opened = new boolean[n][n];
+        uf = new WeightedQuickUnionUF(n * n + 2);
+        uf2 = new WeightedQuickUnionUF(n * n + 1);
+        top = n * n;
+        bottom = n * n + 1;
+        countOpen = 0;
+        len = n;
     }
 
-    public void open(int y, int x) {
-        validate(x, y);
-        int index = xyTo1D(y, x),
-                right = index + 1,
-                left = index - 1,
-                up = index - N,
-                down = index + N;
-        opened[index] = true;
-        if (y == 1) {
-            weightedQuickUnionUF.union(index, firstReserved);
-        } else if (y == N) {
-            weightedQuickUnionUF.union(index, secondReserved);
+    public void open(int i, int j) {
+        if (checkIndex(i, j)) {
+            if (!isOpen(i, j)) {
+                opened[i - 1][j - 1] = true;
+                countOpen++;
+            }
+            if (i == 1) {
+                uf.union(j - 1, top);
+                uf2.union(j - 1, top);
+            }
+            if (i == len) uf.union((i - 1) * len + j - 1, bottom);
+            if (i > 1 && isOpen(i - 1, j)) {
+                uf.union((i - 1) * len + j - 1, (i - 2) * len + j - 1);
+                uf2.union((i - 1) * len + j - 1, (i - 2) * len + j - 1);
+            }
+            if (i < len && isOpen(i + 1, j)) {
+                uf.union((i - 1) * len + j - 1, i * len + j - 1);
+                uf2.union((i - 1) * len + j - 1, i * len + j - 1);
+            }
+            if (j > 1 && isOpen(i, j - 1)) {
+                uf.union((i - 1) * len + j - 1, (i - 1) * len + j - 2);
+                uf2.union((i - 1) * len + j - 1, (i - 1) * len + j - 2);
+            }
+            if (j < len && isOpen(i, j + 1)) {
+                uf.union((i - 1) * len + j - 1, (i - 1) * len + j);
+                uf2.union((i - 1) * len + j - 1, (i - 1) * len + j);
+            }
+        } else {
+            throw new IllegalArgumentException();
         }
-        connectIfIsOpened(index, right, left, up, down);
     }
 
-    public boolean isFull(int y, int x) {
-        validate(x, y);
-        return weightedQuickUnionUF.connected(xyTo1D(y, x), firstReserved);
+    public boolean isOpen(int i, int j) {
+        if (checkIndex(i, j)) {
+            return opened[i - 1][j - 1];
+        }
+        throw new IllegalArgumentException();
+    }
+
+    public boolean isFull(int i, int j) {
+        if (checkIndex(i, j)) {
+            return uf2.connected((i - 1) * len + j - 1, top);
+        }
+        throw new IllegalArgumentException();
+    }
+
+    public int numberOfOpenSites() {
+        return countOpen;
     }
 
     public boolean percolates() {
-        return weightedQuickUnionUF.connected(firstReserved, secondReserved);
+        return uf.connected(top, bottom);
     }
 
-    private void connectIfIsOpened(int main, int... others) {
-        Arrays.stream(others)
-                .filter(site -> neighbourIsOpened(main, site))
-                .forEach(site -> weightedQuickUnionUF.union(main, site));
-    }
-
-    private boolean neighbourIsOpened(int first, int second) {
-        return (first > second ? second >= 0 : second < firstReserved)
-                && opened[second]
-                && !weightedQuickUnionUF.connected(first, second);
-    }
-
-    private void validate(int x, int y) {
-        if (x <= 0 || x > N || y <= 0 || y > N) {
-            throw new IndexOutOfBoundsException("one of the indexes is out of bounds");
-        }
-    }
-
-    private int xyTo1D(int y, int x) {
-        return N * (y - 1) + x - 1;
-    }
-
-    public static void main(String[] args){
-        System.out.println();
+    private boolean checkIndex(int i, int j) {
+        if (i < 1 || i > len || j < 1 || j > len) return false;
+        return true;
     }
 }

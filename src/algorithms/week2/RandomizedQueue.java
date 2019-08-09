@@ -3,70 +3,76 @@ package algorithms.week2;
 import edu.princeton.cs.algs4.StdRandom;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
     private int size;
     private Item[] arr;
 
     // construct an empty randomized queue
-    public RandomizedQueue(){
+    public RandomizedQueue() {
         size = 0;
         arr = (Item[]) new Object[1];
     }
 
     // is the randomized queue empty?
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return size == 0;
     }
 
     // return the number of items on the randomized queue
-    public int size(){
+    public int size() {
         return size;
     }
 
     // add the item
-    public void enqueue(Item item){
-        if(size == arr.length){
-            resize(2*arr.length);
+    public void enqueue(Item item) {
+        if (item == null) throw new IllegalArgumentException();
+        if (size == arr.length) {
+            resize(2 * arr.length);
         }
-       arr[size++]=item;
+        arr[size++] = item;
     }
 
     // remove and return a random item
-    public Item dequeue(){
+    public Item dequeue() {
+        if (isEmpty()) throw new NoSuchElementException();
         int random = StdRandom.uniform(size);
         Item item = arr[random];
-        arr[random] = arr[size-1];
+        arr[random] = arr[size - 1];
         size--;
         shrink();
-        return arr[random];
+        return item;
     }
 
     // return a random item (but do not remove it)
-    public Item sample(){
+    public Item sample() {
+        if (isEmpty()) throw new NoSuchElementException();
         return arr[StdRandom.uniform(size)];
     }
 
     // return an independent iterator over items in random order
-    public Iterator<Item> iterator(){
+    public Iterator<Item> iterator() {
         return new ArrayIterator();
     }
 
-    private void shrink(){
+    private void shrink() {
         if (size > 0 && size == arr.length / 4)
             resize(arr.length / 2);
     }
-    private class ArrayIterator implements Iterator<Item>{
-        private Item[] items;
-        private int i=0;
 
-        ArrayIterator(){
+    private class ArrayIterator implements Iterator<Item> {
+        private final Item[] items;
+        private int i = 0;
+
+        ArrayIterator() {
             items = (Item[]) new Object[size];
             for (int j = 0; j < size; j++) {
                 items[j] = arr[j];
             }
             StdRandom.shuffle(items);
         }
+
         @Override
         public boolean hasNext() {
             return i < size;
@@ -74,6 +80,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         @Override
         public Item next() {
+            if (i == size) throw new NoSuchElementException();
             return items[i++];
         }
 
@@ -83,30 +90,42 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
     }
 
-    private void resize(int newsize){
+    private void resize(int newsize) {
         Item[] newArr = (Item[]) new Object[newsize];
-        for(int i = 0;i<size;i++){
+        for (int i = 0; i < size; i++) {
             newArr[i] = arr[i];
         }
         arr = newArr;
     }
+
     // unit testing (required)
-    public static void main(String[] args){
-        RandomizedQueue<Integer> deque = new RandomizedQueue<Integer>();
-        deque.enqueue(1);
-        deque.enqueue(12);
-        deque.enqueue(2);
-        deque.enqueue(1213);
-        deque.enqueue(3);
-        deque.enqueue(14);
-        deque.enqueue(1212);
-        System.out.println("Deque "+deque.dequeue());
-        Iterator<Integer> integerIterator = deque.iterator();
-        while (integerIterator.hasNext()){
+    public static void main(String[] args) {
+        RandomizedQueue<Integer> randomizedQueue = new RandomizedQueue<Integer>();
+        randomizedQueue.enqueue(1);
+        randomizedQueue.enqueue(12);
+        randomizedQueue.enqueue(2);
+        randomizedQueue.enqueue(1213);
+        randomizedQueue.enqueue(3);
+        randomizedQueue.enqueue(14);
+        randomizedQueue.enqueue(1212);
+        System.out.println("Size " + randomizedQueue.size());
+        Iterator<Integer> integerIterator = randomizedQueue.iterator();
+        while (integerIterator.hasNext()) {
             System.out.println(integerIterator.next());
         }
-
-
-        System.out.println("Sample"+deque.sample());
+        System.out.println("Sample"+randomizedQueue.sample());
+        System.out.println("Sample"+randomizedQueue.sample());
+        System.out.println("Sample"+randomizedQueue.sample());
+        System.out.println("Sample"+randomizedQueue.sample());
+        System.out.println("Sample"+randomizedQueue.sample());
+        System.out.println("Sample"+randomizedQueue.sample());
+        System.out.println("dequeue" + randomizedQueue.dequeue());
+        System.out.println("dequeue" + randomizedQueue.dequeue());
+        System.out.println("dequeue" + randomizedQueue.dequeue());
+        System.out.println("dequeue" + randomizedQueue.dequeue());
+        System.out.println("dequeue" + randomizedQueue.dequeue());
+        System.out.println("dequeue" + randomizedQueue.dequeue());
+        System.out.println("dequeue" + randomizedQueue.dequeue());
+        System.out.println("dequeue" + randomizedQueue.sample());
     }
 }
